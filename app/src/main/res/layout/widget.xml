@@ -11,14 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:src="@drawable/ic_refresh"
         android:background="#3300ff00"
         android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:src="@drawable/ic_refresh"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ListView
         android:id="@+id/widgetList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/refresh"/>
+        android:layout_below="@id/refresh" />
 </RelativeLayout>

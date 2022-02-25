@@ -9,11 +9,8 @@ import android.content.Intent
 import android.os.Build
 import android.widget.RemoteViews
 import teach.meskills.lastfm.R
-import teach.meskills.lastfm.databinding.WidgetBinding
-
 
 class WidgetProvider : AppWidgetProvider() {
-    private lateinit var binding: WidgetBinding
 
     override fun onUpdate(
         context: Context, appWidgetManager: AppWidgetManager,
@@ -31,55 +28,42 @@ class WidgetProvider : AppWidgetProvider() {
     ) {
         val remoteViews = RemoteViews(context.packageName, R.layout.widget)
         updateRemoteAdapter(remoteViews, context, appWidgetId)
-//        setList(remoteViews, context, appWidgetId)
         appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetList)
     }
 
-    private fun updateRemoteAdapter(remoteViews: RemoteViews, context: Context?, appWidgetId: Int) {
+    private fun updateRemoteAdapter(remoteViews: RemoteViews, context: Context, appWidgetId: Int) {
         remoteViews.setImageViewResource(R.id.refresh, R.drawable.ic_refresh)
         val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         } else {
             PendingIntent.FLAG_UPDATE_CURRENT
         }
-        val adapterIntent = Intent(context, WidgetService::class.java).apply {
+        val adapterIntent = WidgetService.getIntent(context).apply {
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         }
         remoteViews.setRemoteAdapter(R.id.widgetList, adapterIntent)
-        ////Формируем actionIntent для pendingIntent  чтобы обрабатывать клики элементы виджета
+
         val actionIntent = Intent(context, WidgetProvider::class.java).apply {
             action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         }
         val pendingIntent = PendingIntent.getBroadcast(context, appWidgetId, actionIntent, flags)
-                remoteViews.setPendingIntentTemplate(R.id.widgetList, pendingIntent)
+        remoteViews.setPendingIntentTemplate(R.id.widgetList, pendingIntent)
 
         val intentUpdate = Intent(context, WidgetProvider::class.java)
         intentUpdate.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-        //Назначим обновление всем инстансам виджета
+
         val ids = AppWidgetManager.getInstance(context)
-            .getAppWidgetIds(ComponentName(context!!, WidgetProvider::class.java))
+            .getAppWidgetIds(ComponentName(context, WidgetProvider::class.java))
         intentUpdate.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
-        //Назначим этот intent как PendingIntent, используя PendingIntent.getBroadcast()
+
         val pendingUpdate = PendingIntent.getBroadcast(
             context,
             appWidgetId,
             intentUpdate,
             flags
         )
-        //Назначим этот pendingIntent откликом на нажатие пользователем кнопки ‘Обновить’
         remoteViews.setOnClickPendingIntent(R.id.refresh, pendingUpdate)
-    }
-
-    fun setList(remoteViews: RemoteViews, context: Context?, appWidgetId: Int) {
-//        val adapter = Intent(context, MyService::class.java)
-        val adapter = WidgetAdapter(context!!)
-        binding.widgetList.adapter = adapter
-
-//        adapter.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-//        val data: Uri = Uri.parse(adapter.toUri(Intent.URI_INTENT_SCHEME))
-//        adapter.data = data
-
     }
 }
