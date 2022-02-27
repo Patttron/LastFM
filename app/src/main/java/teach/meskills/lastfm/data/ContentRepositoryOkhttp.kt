@@ -6,15 +6,18 @@ import com.google.gson.JsonElement
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
-import teach.meskills.lastfm.chartTracks.AudioResponseDTO
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import teach.meskills.lastfm.chart_tracks.AudioResponseDTO
 import java.lang.Exception
 import java.security.MessageDigest
 
 class ContentRepositoryOkhttp(
     private val appDatabase: AppDatabase
-) : ContentRepository {
+) : ContentRepository, KoinComponent {
+
     private val gson = Gson()
-    private val okHttpClient = OkHttpClient.Builder().build()
+    private val okHttpClient: OkHttpClient by inject()
 
     override suspend fun signIn(login: String, password: String): Boolean {
         try {
@@ -81,7 +84,7 @@ class ContentRepositoryOkhttp(
             appDatabase.audioDao().saveAudio(trackMap)
             trackMap
         } catch (e: Exception) {
-            appDatabase.audioDao().getAudio()
+            return appDatabase.audioDao().getAudio()
         }
     }
 

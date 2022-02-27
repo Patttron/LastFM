@@ -7,18 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import teach.meskills.lastfm.R
-import teach.meskills.lastfm.chartTracks.ChartFragment
-import teach.meskills.lastfm.data.AppDatabase
-import teach.meskills.lastfm.data.ContentRepositoryOkhttp
+import teach.meskills.lastfm.chart_tracks.ChartFragment
 import teach.meskills.lastfm.databinding.SignInFragmentBinding
-import teach.meskills.lastfm.getViewModel
 
 class LoginFragment : Fragment() {
     private lateinit var binding: SignInFragmentBinding
     private val pref by lazy {
         CustomPreference(requireContext())
     }
+
+    private val viewModel by viewModel<UserViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,9 +27,6 @@ class LoginFragment : Fragment() {
     ): View? {
         binding = SignInFragmentBinding.inflate(inflater, container, false)
         val loginManager = LoginManager(pref)
-        val viewModel = getViewModel {
-            UserViewModel(ContentRepositoryOkhttp(AppDatabase.build(requireContext())))
-        }
         Log.d("prefer", pref.login)
         if (loginManager.isLoggedIn == true) {
             parentFragmentManager
@@ -42,12 +39,12 @@ class LoginFragment : Fragment() {
                     loginManager.logIn(user)
                 }
             }
-            viewModel.errorMessage.observe(viewLifecycleOwner){
-                if(it){
-                        Toast.makeText(requireContext(), "Wrong login or password", Toast.LENGTH_SHORT)
-                            .show()
-                        viewModel.errorMessage.value = false
-                    }
+            viewModel.errorMessage.observe(viewLifecycleOwner) {
+                if (it) {
+                    Toast.makeText(requireContext(), "Wrong login or password", Toast.LENGTH_SHORT)
+                        .show()
+                    viewModel.errorMessage.value = false
+                }
             }
             viewModel.isSuccessfullyEnter.observe(viewLifecycleOwner) {
                 if (it) {

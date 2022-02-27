@@ -7,6 +7,8 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.*
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,14 +16,14 @@ import teach.meskills.lastfm.MainActivity
 import teach.meskills.lastfm.R
 import java.lang.Exception
 
-class DownloadWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
+class DownloadWorker(context: Context, params: WorkerParameters) : KoinComponent,
+    Worker(context, params) {
 
-    private val appDatabase = AppDatabase.build(context)
     private val scope = CoroutineScope(Dispatchers.IO)
+    private val loading: ContentRepository by inject()
 
     override fun doWork(): Result {
         scope.launch {
-            val loading = ContentRepositoryOkhttp(appDatabase)
             try {
                 loading.getMedia()
                 with(NotificationManagerCompat.from(applicationContext)) {
@@ -35,7 +37,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) : Worker(contex
                 Result.failure()
             }
         }
-            return Result.success()
+        return Result.success()
     }
 
     private fun createChannel(context: Context) {

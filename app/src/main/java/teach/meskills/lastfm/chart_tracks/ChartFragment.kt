@@ -1,4 +1,4 @@
-package teach.meskills.lastfm.chartTracks
+package teach.meskills.lastfm.chart_tracks
 
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
@@ -14,9 +14,8 @@ import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import teach.meskills.lastfm.*
-import teach.meskills.lastfm.data.AppDatabase
-import teach.meskills.lastfm.data.ContentRepositoryOkhttp
 import teach.meskills.lastfm.data.DownloadWorker
 import teach.meskills.lastfm.data.DownloadWorker.Companion.TAG
 import teach.meskills.lastfm.databinding.RecyclerChartFragmentBinding
@@ -32,6 +31,8 @@ class ChartFragment : Fragment() {
         CustomPreference(requireContext())
     }
 
+    private val viewModel by viewModel<ChartViewModel>()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,9 +43,7 @@ class ChartFragment : Fragment() {
         val dividerItemDecoration = DividerItemDecoration(context, RecyclerView.VERTICAL)
         dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.devider))
         binding.recycler.addItemDecoration(dividerItemDecoration)
-        val viewModel = getViewModel {
-            ChartViewModel(ContentRepositoryOkhttp(AppDatabase.build(requireContext())))
-        }
+
         WorkManager.getInstance(requireContext()).cancelAllWorkByTag(TAG)
         val constraints = Constraints.Builder()
             .setRequiresCharging(true)

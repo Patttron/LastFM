@@ -1,4 +1,4 @@
-package teach.meskills.lastfm.chartTracks
+package teach.meskills.lastfm.chart_tracks
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData

@@ -5,12 +5,15 @@ import android.content.Intent
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService.RemoteViewsFactory
 import teach.meskills.lastfm.R
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import teach.meskills.lastfm.data.AppDatabase
 import teach.meskills.lastfm.data.AudioEntity
 
-class WidgetFactory(var context: Context, intent: Intent) : RemoteViewsFactory {
+class WidgetFactory(var context: Context, intent: Intent) : KoinComponent, RemoteViewsFactory {
 
-    lateinit var appDatabase: AppDatabase
+    private lateinit var appDatabase : AppDatabase
+
     private lateinit var audio: List<AudioEntity>
 
     override fun onCreate() {
