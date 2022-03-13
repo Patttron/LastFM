@@ -10,10 +10,6 @@ import teach.meskills.lastfm.data.ContentRepository
 import teach.meskills.lastfm.data.ContentRepositoryOkhttp
 import teach.meskills.lastfm.login.UserViewModel
 
-val appDatabase = module {
-    single<AppDatabase> { AppDatabase.build(context = get()) }
-}
-
 val contentRepository = module {
     single<AppDatabase> { AppDatabase.build(context = get()) }
     single<ContentRepository> { ContentRepositoryOkhttp(appDatabase = get()) }

@@ -60,12 +60,12 @@ class ContentRepositoryOkhttp(
         return try {
             val urlParameter =
                 "method=chart.gettoptracks&api_key=$APIKEY&format=json"
-            val urlAdress = "https://ws.audioscrobbler.com/2.0/?$urlParameter"
+            val urlAddress = "https://ws.audioscrobbler.com/2.0/?$urlParameter"
             val response =
                 okHttpClient
                     .newCall(
                         Request.Builder()
-                            .url(urlAdress)
+                            .url(urlAddress)
                             .post(RequestBody.create(null, ByteArray(0)))
                             .build()
                     ).execute()

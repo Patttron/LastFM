@@ -11,7 +11,6 @@ class LastFmApplication : Application() {
         startKoin {
             androidContext(this@LastFmApplication)
             modules(
-                appDatabase,
                 contentRepository,
                 loginModule,
                 chartModule,

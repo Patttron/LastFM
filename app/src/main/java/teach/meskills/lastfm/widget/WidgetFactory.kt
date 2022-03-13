@@ -12,13 +12,12 @@ import teach.meskills.lastfm.data.AudioEntity
 
 class WidgetFactory(var context: Context, intent: Intent) : KoinComponent, RemoteViewsFactory {
 
-    private lateinit var appDatabase : AppDatabase
-
+    private val appDatabase : AppDatabase by inject()
     private lateinit var audio: List<AudioEntity>
 
     override fun onCreate() {
         audio = emptyList()
-        appDatabase = AppDatabase.build(context)
+        appDatabase
     }
 
     override fun getCount(): Int = audio.size

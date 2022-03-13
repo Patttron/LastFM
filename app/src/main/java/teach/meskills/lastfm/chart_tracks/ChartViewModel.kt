@@ -13,7 +13,7 @@ class ChartViewModel(
 ) : ViewModel() {
 
     val trackLiveData = MutableLiveData<List<AudioEntity>>()
-    private val isRefreshing = MutableLiveData<Boolean>()
+    val isRefreshing = MutableLiveData<Boolean>()
     private val errorMessage = MutableLiveData<Boolean>()
     private val scope = CoroutineScope(Dispatchers.Main)
 
